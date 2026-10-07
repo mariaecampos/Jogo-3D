@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ControleDoJogador : MonoBehaviour
 {
-    public float velocidadeBase = 30f;
+    public float velocidadeBase = 120f;
     public float bonusDeVelocidadeShift = 15f;
     public float velocidadeRotacao = 70f;
     public float forcaDoPulo = 10f;
