@@ -8,25 +8,16 @@ public class GerenciadorDocumento : MonoBehaviour
 
     public TextMeshProUGUI textoContador;
     public int totalDocumentos = 0;
+    public bool debugAtivo = true;
 
     private int documentosColetados = 0;
-
-    public bool TodosDocumentosColetados()
-    {
-        return totalDocumentos > 0 &&
-               documentosColetados >= totalDocumentos;
-    }
 
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
     private void Start()
@@ -37,25 +28,47 @@ public class GerenciadorDocumento : MonoBehaviour
         AtualizarUI();
     }
 
+    private void Update()
+    {
+        if (debugAtivo && Input.GetKeyDown(KeyCode.R))
+            ColetarDocumentoDebug();
+    }
+
     public void AdicionarDocumento()
     {
-        if (TodosDocumentosColetados())
+        if (documentosColetados >= totalDocumentos)
             return;
 
         documentosColetados++;
-
-        Debug.Log("Documentos: " + documentosColetados +
-                  " / " + totalDocumentos);
-
         AtualizarUI();
+    }
+
+    public void ColetarDocumentoDebug()
+    {
+        if (!debugAtivo)
+            return;
+
+        if (documentosColetados < totalDocumentos)
+        {
+            documentosColetados++;
+            Debug.Log("Documento de debug: " + documentosColetados + " / " + totalDocumentos);
+            AtualizarUI();
+        }
+        else
+        {
+            Debug.Log("Todos os documentos já foram contabilizados.");
+        }
+    }
+
+    public bool TodosDocumentosColetados()
+    {
+        return totalDocumentos > 0 &&
+               documentosColetados >= totalDocumentos;
     }
 
     private void AtualizarUI()
     {
         if (textoContador != null)
-        {
-            textoContador.text = "Documentos: " +
-                documentosColetados + " / " + totalDocumentos;
-        }
+            textoContador.text = "Documentos: " + documentosColetados + " / " + totalDocumentos;
     }
 }
