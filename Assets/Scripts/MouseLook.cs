@@ -15,6 +15,9 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
+        // jogo pausado (menu aberto): a câmera não gira com o mouse
+        if (Time.timeScale == 0f) return;
+
         float mouseX = Input.GetAxis("Mouse X") * sensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
 
