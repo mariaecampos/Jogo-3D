@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 
@@ -6,11 +7,15 @@ public class GerenciadorDocumento : MonoBehaviour
     public static GerenciadorDocumento Instance;
 
     public TextMeshProUGUI textoContador;
-
-    [Tooltip("0 = conta sozinho quantos documentos existem na cena ao iniciar")]
     public int totalDocumentos = 0;
 
     private int documentosColetados = 0;
+
+    public bool TodosDocumentosColetados()
+    {
+        return totalDocumentos > 0 &&
+               documentosColetados >= totalDocumentos;
+    }
 
     private void Awake()
     {
@@ -26,7 +31,6 @@ public class GerenciadorDocumento : MonoBehaviour
 
     private void Start()
     {
-        // se o total não foi informado, conta os documentos que existem na cena
         if (totalDocumentos <= 0)
             totalDocumentos = FindObjectsOfType<ColetorDocumento>().Length;
 
@@ -35,24 +39,23 @@ public class GerenciadorDocumento : MonoBehaviour
 
     public void AdicionarDocumento()
     {
-        documentosColetados++;
-        Debug.Log("Documento contabilizado! Total atual: " + documentosColetados + " / " + totalDocumentos);
-        AtualizarUI();
+        if (TodosDocumentosColetados())
+            return;
 
-        // coletou todos: o jogador vence
-        if (totalDocumentos > 0 && documentosColetados >= totalDocumentos)
-            FimDeJogo.Vitoria();
+        documentosColetados++;
+
+        Debug.Log("Documentos: " + documentosColetados +
+                  " / " + totalDocumentos);
+
+        AtualizarUI();
     }
 
-    void AtualizarUI()
+    private void AtualizarUI()
     {
         if (textoContador != null)
         {
-            textoContador.text = "Documentos: " + documentosColetados + " / " + totalDocumentos;
-        }
-        else
-        {
-            Debug.LogError("ERRO CRÍTICO: O campo 'Texto Contador' está VAZIO no Inspector do objeto GameManager!");
+            textoContador.text = "Documentos: " +
+                documentosColetados + " / " + totalDocumentos;
         }
     }
 }
